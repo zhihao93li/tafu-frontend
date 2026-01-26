@@ -119,7 +119,7 @@ export default function BaziInputPage() {
       // api.post 已经返回解析后的 data 字段内容(八字数据)
       const baziData = await api.post('/bazi/calculate', birthData);
 
-      if (!baziData || !baziData.pillars) {
+      if (!baziData || !baziData.fourPillars) {
         throw new Error('排盘计算失败');
       }
 

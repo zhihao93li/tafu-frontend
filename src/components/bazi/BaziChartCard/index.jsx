@@ -311,23 +311,90 @@ export default function BaziChartCard({
 
   const daYunParsed = useMemo(() => {
     if (!currentDaYun) return null;
-    const { stem, branch } = parseGanZhi(currentDaYun.ganZhi);
+    
+    // ⭐ 直接使用后端返回的 gan/zhi 字段，不再需要 parseGanZhi
+    const gan = currentDaYun.gan;
+    const zhi = currentDaYun.zhi;
+    
+    // 将字符串转换为前端期望的对象结构
+    const ganMap = {
+      '甲': { chinese: '甲', element: 'wood', yinYang: 'yang' },
+      '乙': { chinese: '乙', element: 'wood', yinYang: 'yin' },
+      '丙': { chinese: '丙', element: 'fire', yinYang: 'yang' },
+      '丁': { chinese: '丁', element: 'fire', yinYang: 'yin' },
+      '戊': { chinese: '戊', element: 'earth', yinYang: 'yang' },
+      '己': { chinese: '己', element: 'earth', yinYang: 'yin' },
+      '庚': { chinese: '庚', element: 'metal', yinYang: 'yang' },
+      '辛': { chinese: '辛', element: 'metal', yinYang: 'yin' },
+      '壬': { chinese: '壬', element: 'water', yinYang: 'yang' },
+      '癸': { chinese: '癸', element: 'water', yinYang: 'yin' },
+    };
+    
+    const zhiMap = {
+      '子': { chinese: '子', element: 'water' },
+      '丑': { chinese: '丑', element: 'earth' },
+      '寅': { chinese: '寅', element: 'wood' },
+      '卯': { chinese: '卯', element: 'wood' },
+      '辰': { chinese: '辰', element: 'earth' },
+      '巳': { chinese: '巳', element: 'fire' },
+      '午': { chinese: '午', element: 'fire' },
+      '未': { chinese: '未', element: 'earth' },
+      '申': { chinese: '申', element: 'metal' },
+      '酉': { chinese: '酉', element: 'metal' },
+      '戌': { chinese: '戌', element: 'earth' },
+      '亥': { chinese: '亥', element: 'water' },
+    };
+    
     return {
-      stem, branch,
-      hiddenStems: getHiddenStems(branch?.chinese),
+      stem: ganMap[gan] || null,
+      branch: zhiMap[zhi] || null,
+      hiddenStems: getHiddenStems(zhi),
       naYin: getNayinByGanZhi(currentDaYun.ganZhi),
-      isKongWang: currentDaYun.xunKong?.includes(branch?.chinese),
+      isKongWang: currentDaYun.xunKong?.includes(zhi),
     };
   }, [currentDaYun]);
 
   const liuNianParsed = useMemo(() => {
     if (!currentLiuNian) return null;
-    const { stem, branch } = parseGanZhi(currentLiuNian.ganZhi);
+    
+    // ⭐ 直接使用后端返回的 gan/zhi 字段
+    const gan = currentLiuNian.gan;
+    const zhi = currentLiuNian.zhi;
+    
+    const ganMap = {
+      '甲': { chinese: '甲', element: 'wood', yinYang: 'yang' },
+      '乙': { chinese: '乙', element: 'wood', yinYang: 'yin' },
+      '丙': { chinese: '丙', element: 'fire', yinYang: 'yang' },
+      '丁': { chinese: '丁', element: 'fire', yinYang: 'yin' },
+      '戊': { chinese: '戊', element: 'earth', yinYang: 'yang' },
+      '己': { chinese: '己', element: 'earth', yinYang: 'yin' },
+      '庚': { chinese: '庚', element: 'metal', yinYang: 'yang' },
+      '辛': { chinese: '辛', element: 'metal', yinYang: 'yin' },
+      '壬': { chinese: '壬', element: 'water', yinYang: 'yang' },
+      '癸': { chinese: '癸', element: 'water', yinYang: 'yin' },
+    };
+    
+    const zhiMap = {
+      '子': { chinese: '子', element: 'water' },
+      '丑': { chinese: '丑', element: 'earth' },
+      '寅': { chinese: '寅', element: 'wood' },
+      '卯': { chinese: '卯', element: 'wood' },
+      '辰': { chinese: '辰', element: 'earth' },
+      '巳': { chinese: '巳', element: 'fire' },
+      '午': { chinese: '午', element: 'fire' },
+      '未': { chinese: '未', element: 'earth' },
+      '申': { chinese: '申', element: 'metal' },
+      '酉': { chinese: '酉', element: 'metal' },
+      '戌': { chinese: '戌', element: 'earth' },
+      '亥': { chinese: '亥', element: 'water' },
+    };
+    
     return {
-      stem, branch,
-      hiddenStems: getHiddenStems(branch?.chinese),
+      stem: ganMap[gan] || null,
+      branch: zhiMap[zhi] || null,
+      hiddenStems: getHiddenStems(zhi),
       naYin: getNayinByGanZhi(currentLiuNian.ganZhi),
-      isKongWang: currentLiuNian.xunKong?.includes(branch?.chinese),
+      isKongWang: currentLiuNian.xunKong?.includes(zhi),
     };
   }, [currentLiuNian]);
 
