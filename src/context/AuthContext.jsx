@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { api, setToken, getToken, clearToken } from '../services/api';
+import { syncLocalSubjectsToServer } from '../utils/syncLocalSubjects';
+import { queryClient } from '../main';
 
 const AuthContext = createContext(null)
 
@@ -55,6 +57,14 @@ export function AuthProvider({ children }) {
     
     setUser(userData);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+    
+    // 后台异步同步本地命盘到服务器 (不阻塞登录流程)
+    syncLocalSubjectsToServer(queryClient, (result) => {
+      if (result.synced > 0) {
+        console.log(`[登录] 已同步 ${result.synced} 个本地命盘到云端`);
+      }
+    });
+    
     return userData;
   }
 
@@ -70,6 +80,14 @@ export function AuthProvider({ children }) {
     
     setUser(userData);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(userData));
+    
+    // 后台异步同步本地命盘到服务器 (不阻塞注册流程)
+    syncLocalSubjectsToServer(queryClient, (result) => {
+      if (result.synced > 0) {
+        console.log(`[注册] 已同步 ${result.synced} 个本地命盘到云端`);
+      }
+    });
+    
     return userData;
   }
 
