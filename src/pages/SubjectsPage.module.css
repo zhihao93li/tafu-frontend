@@ -1,0 +1,76 @@
+.main {
+  min-height: 100vh;
+  background: var(--light-95);
+  padding: 120px 40px 100px;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.container {
+  max-width: var(--max-width-lg);
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.title {
+  font-size: var(--heading-4);
+  font-weight: 600;
+  color: var(--dark-7);
+}
+
+.addButton {
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background-color: var(--dark-7);
+  color: white;
+  border-radius: var(--radius-full);
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.addButton:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: var(--spacing-md);
+}
+
+.emptyState {
+  text-align: center;
+  padding: var(--spacing-3xl) 0;
+  color: var(--grey-50);
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+  .main {
+    padding: 100px 20px 80px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr; /* 移动端单列 */
+  }
+  
+  .header {
+    flex-direction: row; /* Keep row unless title wraps */
+    align-items: center;
+  }
+  
+  .title {
+    font-size: 24px;
+  }
+}

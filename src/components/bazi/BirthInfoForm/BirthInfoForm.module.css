@@ -1,0 +1,92 @@
+.formGrid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.dateRow {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+/* Date inputs take remaining space */
+.dateRow>div:not(.checkboxWrapper) {
+  flex: 1;
+}
+
+/* Checkbox stays compact */
+.checkboxWrapper {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  /* Match input height roughly */
+}
+
+.timeRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-sm);
+}
+
+.locationRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--spacing-sm);
+}
+
+.coordinatesDisplay {
+  margin-top: var(--spacing-xs);
+  font-size: var(--text-small);
+  color: var(--grey-50);
+  text-align: center;
+}
+
+.sectionTitle {
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: var(--grey-50);
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  .dateRow {
+    /* 不换行，允许横向滚动 */
+    flex-wrap: nowrap;
+    gap: var(--spacing-xs);
+  }
+
+  /* 年份选择器需要更多空间 */
+  .dateRow>div:first-child {
+    flex: 1.2;
+    min-width: 0;
+    /* 允许收缩 */
+  }
+
+  /* 月份和日选择器 */
+  .dateRow>div:not(:first-child):not(.checkboxWrapper) {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .locationRow {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-md);
+  }
+}

@@ -1,0 +1,327 @@
+/**
+ * GradientBackground 组件样式
+ * 
+ * 可复用的渐变背景效果，包含：
+ * - 栅格线（带毛玻璃效果）
+ * - 彩色椭圆光效
+ * - 渐变遮罩
+ * - 噪点纹理
+ * - 响应式设计（小屏幕优化）
+ */
+
+.background {
+  position: absolute;
+  top: 0;
+  left: -120px;
+  right: -120px;
+  bottom: 0;
+  z-index: 0;
+  /* 默认背景色，可通过 props 覆盖 */
+  background-color: rgb(244, 242, 241);
+  overflow: hidden;
+}
+
+/* ==================== 栅格线 ==================== */
+
+.gridLines {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: normal;
+}
+
+.gridLine {
+  flex: 1 1 0;
+  height: 100%;
+  position: relative;
+  /* 水平渐变背景 */
+  background: linear-gradient(270deg, rgba(242, 240, 238, 0.2) 0%, rgba(242, 240, 238, 0) 100%);
+  /* 毛玻璃效果 */
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+}
+
+/* 使用 ::after 画右边框 */
+.gridLine::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  /* 白色半透明边框 */
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* 最后一条栅格线不需要右边框 */
+.gridLine:last-child::after {
+  display: none;
+}
+
+/* ==================== 彩色光效 ==================== */
+
+.leftAbstract,
+.rightAbstract {
+  position: absolute;
+  width: 378px;
+  height: 571px;
+  transition: all 0.5s ease;
+}
+
+.leftAbstract {
+  top: 0;
+  left: -80px;
+}
+
+.rightAbstract {
+  top: 0;
+  right: -80px;
+  transform: rotate(180deg);
+}
+
+.ellipseGroup {
+  position: absolute;
+  width: 378px;
+  height: 571px;
+  filter: blur(120px);
+  opacity: 1;
+  transition: all 0.5s ease;
+}
+
+.ellipseGroup:nth-child(2) {
+  filter: blur(100px);
+  opacity: 1;
+}
+
+.ellipse {
+  position: absolute;
+  width: 207px;
+  height: 207px;
+  border-radius: 50%;
+  transition: all 0.5s ease;
+}
+
+/* ==================== 渐变遮罩 ==================== */
+
+/* 底部渐变：从透明到背景色 */
+.bgGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(244, 242, 241, 0) 0%,
+    rgb(244, 242, 241) 100%
+  );
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* 顶部渐变：从背景色到透明 */
+.bgGradientTop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 415px;
+  background: linear-gradient(
+    180deg,
+    rgba(244, 242, 241, 0.9) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ==================== 噪点纹理 ==================== */
+
+.noise {
+  position: absolute;
+  inset: 0;
+  background-size: 200px;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  /* 大屏幕下降低噪点透明度 */
+  opacity: 0.4;
+  /* 噪点在最上层 */
+  z-index: 4;
+}
+
+/* ==================== 动画与扩展 (Enhanced Mode) ==================== */
+
+@keyframes float {
+  0% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -20px) scale(1.1); }
+  66% { transform: translate(-20px, 30px) scale(0.95); }
+  100% { transform: translate(0, 0) scale(1); }
+}
+
+/* Animated State */
+.animated .ellipseGroup {
+  animation: float 15s ease-in-out infinite;
+}
+
+.animated .ellipseGroup:nth-child(2) {
+  animation-delay: -5s;
+  animation-duration: 18s;
+}
+
+/* Expanded State (Larger, more visible on mobile) */
+.expanded .leftAbstract {
+  width: 800px;
+  height: 800px;
+  left: -200px;
+  top: -100px;
+}
+
+.expanded .rightAbstract {
+  width: 800px;
+  height: 800px;
+  right: -200px;
+  top: -100px;
+}
+
+.expanded .ellipseGroup {
+  width: 100%;
+  height: 100%;
+  filter: blur(140px);
+  opacity: 0.7; /* Keep high opacity */
+}
+
+.expanded .ellipse {
+  width: 60%;
+  height: 60%;
+}
+
+/* ==================== 响应式设计 ==================== */
+
+/* 平板端 */
+@media (max-width: 768px) {
+  .gridLine {
+    background: linear-gradient(270deg, rgba(242, 240, 238, 0.12) 0%, rgba(242, 240, 238, 0) 100%);
+  }
+
+  .gridLine::after {
+    background-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .noise {
+    opacity: 0.5;
+  }
+
+  /* Default shrinking (overridden by .expanded) */
+  .ellipseGroup {
+    width: 300px;
+    height: 450px;
+    filter: blur(100px);
+    opacity: 0.8;
+  }
+
+  /* Expanded override */
+  .expanded .ellipseGroup {
+    width: 100%;
+    height: 100%;
+    filter: blur(120px);
+    opacity: 0.7; /* Maintain visibility */
+  }
+}
+
+/* 移动端 */
+@media (max-width: 768px) {
+  .background {
+    left: -60px;
+    right: -60px;
+  }
+
+  .gridLine {
+    background: linear-gradient(270deg, rgba(242, 240, 238, 0.06) 0%, rgba(242, 240, 238, 0) 100%);
+  }
+
+  .gridLine::after {
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+
+  .noise {
+    opacity: 0.25;
+    background-size: 150px;
+  }
+
+  /* Default shrinking */
+  .leftAbstract,
+  .rightAbstract {
+    width: 250px;
+    height: 400px;
+  }
+
+  .leftAbstract { left: -100px; }
+  .rightAbstract { right: -100px; }
+
+  .ellipseGroup {
+    width: 250px;
+    height: 400px;
+    filter: blur(80px);
+    opacity: 0.6;
+  }
+
+  .ellipse {
+    width: 120px;
+    height: 120px;
+  }
+
+  .bgGradientTop {
+    height: 300px;
+  }
+
+  /* Expanded override for Mobile - Crucial for "Visible on Mobile" */
+  .expanded .leftAbstract,
+  .expanded .rightAbstract {
+    width: 100%;
+    height: 60vh; /* Cover significant height */
+    top: -50px;
+    left: 0;
+    right: 0;
+  }
+  
+  .expanded .rightAbstract {
+    top: auto;
+    bottom: -100px; /* Put one at bottom? */
+  }
+
+  .expanded .ellipseGroup {
+    width: 100%;
+    height: 100%;
+    filter: blur(100px); /* Slightly less blur to keep color intensity */
+    opacity: 0.6; /* Visible enough */
+  }
+  
+  .expanded .ellipse {
+    width: 80%; /* Huge blobs */
+    height: 80%;
+  }
+}
+
+/* 超小屏幕 */
+@media (max-width: 480px) {
+  .gridLine {
+    background: linear-gradient(270deg, rgba(242, 240, 238, 0.03) 0%, rgba(242, 240, 238, 0) 100%);
+  }
+
+  .gridLine::after {
+    background-color: rgba(255, 255, 255, 0.01);
+  }
+
+  .noise {
+    opacity: 0.15;
+  }
+
+  .ellipseGroup {
+    opacity: 0.4;
+    filter: blur(60px);
+  }
+  
+  /* Keep expanded visible even here */
+  .expanded .ellipseGroup {
+    opacity: 0.55;
+  }
+}
