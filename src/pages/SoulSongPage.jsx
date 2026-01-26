@@ -73,14 +73,13 @@ export default function SoulSongPage() {
         }
 
         try {
+            // getSoulSong 返回的已经是 data 字段内容
             const response = await getSoulSong(subjectId);
-            if (response.success) {
-                return response;
-            }
+            return response;
         } catch (error) {
             console.error('Failed to fetch soul song:', error);
+            return null;
         }
-        return null;
     }, [subjectId, isLoggedIn]);
 
     // 初始加载
@@ -136,40 +135,39 @@ export default function SoulSongPage() {
 
         setIsUnlocking(true);
         try {
+            // unlockSoulSong 返回的已经是 data 字段内容
             const response = await unlockSoulSong(subjectId);
-            if (response.success) {
-                // 更新用户积分
-                if (response.remainingBalance !== undefined) {
-                    updateUser({ points: response.remainingBalance });
-                }
+            
+            // 更新用户积分
+            if (response.remainingBalance !== undefined) {
+                updateUser({ points: response.remainingBalance });
+            }
 
-                // 如果已经有数据（alreadyUnlocked 或立即返回）
-                if (response.data) {
-                    setIsUnlocked(true);
-                    setSoulSongData(response.data);
-                    setIsUnlocking(false);
-                    if (!response.alreadyUnlocked) {
-                        toast.success('灵魂歌曲解锁成功');
-                    }
-                } else {
-                    // 数据还在生成中，开始轮询
-                    startPolling();
+            // 如果已经有数据（alreadyUnlocked 或立即返回）
+            if (response.data) {
+                setIsUnlocked(true);
+                setSoulSongData(response.data);
+                setIsUnlocking(false);
+                if (!response.alreadyUnlocked) {
+                    toast.success('灵魂歌曲解锁成功');
                 }
             } else {
-                setIsUnlocking(false);
-                if (response.code === 'INSUFFICIENT_POINTS') {
-                    sessionStorage.setItem('insufficientPointsMessage', '积分不足，请先充值');
-                    const currentPath = window.location.pathname + window.location.search;
-                    sessionStorage.setItem('paymentReturnUrl', currentPath);
-                    navigate('/points');
-                } else {
-                    toast.error(response.message || '解锁失败');
-                }
+                // 数据还在生成中，开始轮询
+                startPolling();
             }
         } catch (error) {
             console.error('Unlock error:', error);
-            toast.error('解锁失败，请稍后重试');
             setIsUnlocking(false);
+            
+            // ApiError 会包含 code 字段
+            if (error.code === 'INSUFFICIENT_POINTS') {
+                sessionStorage.setItem('insufficientPointsMessage', '积分不足，请先充值');
+                const currentPath = window.location.pathname + window.location.search;
+                sessionStorage.setItem('paymentReturnUrl', currentPath);
+                navigate('/points');
+            } else {
+                toast.error(error.message || '解锁失败，请稍后重试');
+            }
         }
     }, [isLoggedIn, subjectId, navigate, toast, updateUser, startPolling]);
 

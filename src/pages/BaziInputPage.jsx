@@ -116,13 +116,12 @@ export default function BaziInputPage() {
         location: `${formData.location.province}/${formData.location.city}/${formData.location.district}`,
       };
 
-      const result = await api.post('/bazi/calculate', birthData);
+      // api.post 已经返回解析后的 data 字段内容(八字数据)
+      const baziData = await api.post('/bazi/calculate', birthData);
 
-      if (!result.success) {
-        throw new Error(result.message || '排盘计算失败');
+      if (!baziData || !baziData.pillars) {
+        throw new Error('排盘计算失败');
       }
-
-      const baziData = result.baziData;
 
       const subjectData = {
         name: formData.name.trim(),

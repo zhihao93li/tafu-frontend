@@ -75,18 +75,19 @@ export default function PaymentMethodPage() {
     setProcessing('mazfu')
 
     try {
+      // api.post 返回的已经是 data 字段内容
       const result = await api.post('/payment/create-mazfu', {
         packageId: pkg.id,
       })
 
-      if (result.success && result.qrcode) {
+      if (result.qrcode) {
         setQrCodeUrl(result.qrcode)
         setCurrentOrderNo(result.orderNo)
         setCurrentAmount(pkg.price)
         setQrModalVisible(true)
         setProcessing(null)
       } else {
-        toast.error(result.message || '创建支付失败')
+        toast.error('创建支付失败')
         setProcessing(null)
       }
     } catch (e) {
@@ -102,15 +103,16 @@ export default function PaymentMethodPage() {
     setProcessing('stripe')
 
     try {
+      // api.post 返回的已经是 data 字段内容
       const result = await api.post('/payment/create-checkout', {
         packageId: pkg.id,
       })
 
-      if (result.success && result.checkoutUrl) {
+      if (result.checkoutUrl) {
         // 跳转到 Stripe Checkout 页面
         window.location.href = result.checkoutUrl
       } else {
-        toast.error(result.message || '创建支付失败')
+        toast.error('创建支付失败')
         setProcessing(null)
       }
     } catch (e) {

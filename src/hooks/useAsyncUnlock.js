@@ -88,11 +88,8 @@ export function useAsyncUnlock({
         }
 
         try {
+            // api.get 返回的已经是 data 字段内容
             const response = await api.get(`/tasks/${taskId}`);
-
-            if (!response.success) {
-                throw new Error(response.message || '查询任务状态失败');
-            }
 
             const { status: taskStatus, content, error } = response;
 
@@ -202,11 +199,8 @@ export function useAsyncUnlock({
         try {
             updateTaskState(themeKey, { status: 'pending', subjectId, theme });
 
+            // api.post 返回的已经是 data 字段内容
             const response = await api.post('/themes/unlock', { subjectId, theme });
-
-            if (!response.success) {
-                throw { message: response.message, code: response.code };
-            }
 
             if (response.alreadyUnlocked) {
                 updateTaskState(themeKey, null);
@@ -239,7 +233,12 @@ export function useAsyncUnlock({
         } catch (err) {
             console.error('[useAsyncUnlock] Unlock error:', themeKey, err);
             updateTaskState(themeKey, null);
-            callbacksRef.current.onError?.(err);
+            // err 可能是 ApiError 实例，包含 message 和 code
+            callbacksRef.current.onError?.({ 
+                message: err.message || '解锁失败',
+                code: err.code,
+                theme
+            });
         }
     }, [queryClient, updateTaskState, startPolling]);
 
