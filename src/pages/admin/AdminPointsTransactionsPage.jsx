@@ -107,13 +107,13 @@ export default function AdminPointsTransactionsPage() {
       </Card>
       <Table
         columns={columns}
-        dataSource={data?.data?.list || []}
+        dataSource={data?.list || []}
         rowKey="id"
         loading={isLoading}
         pagination={{
           current: page,
           pageSize: pageSize,
-          total: data?.data?.total || 0,
+          total: data?.total || 0,
           showSizeChanger: true,
           showQuickJumper: true,
           showTotal: (total) => `共 ${total} 条`,

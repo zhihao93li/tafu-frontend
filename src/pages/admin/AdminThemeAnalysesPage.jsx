@@ -106,13 +106,13 @@ export default function AdminThemeAnalysesPage() {
       </Card>
       <Table
         columns={columns}
-        dataSource={data?.data?.list || []}
+        dataSource={data?.list || []}
         rowKey="id"
         loading={isLoading}
         pagination={{
           current: page,
           pageSize: pageSize,
-          total: data?.data?.total || 0,
+          total: data?.total || 0,
           showSizeChanger: true,
           showQuickJumper: true,
           showTotal: (total) => `共 ${total} 条`,
@@ -132,42 +132,42 @@ export default function AdminThemeAnalysesPage() {
         }}
         loading={detailLoading}
       >
-        {detail?.data && (
+        {detail && (
           <>
             <Descriptions column={2} bordered style={{ marginBottom: 24 }}>
               <Descriptions.Item label="解读 ID" span={2}>
-                {detail.data.id}
+                {detail.id}
               </Descriptions.Item>
               <Descriptions.Item label="主题">
-                <Tag color="blue">{themeLabels[detail.data.theme] || detail.data.theme}</Tag>
+                <Tag color="blue">{themeLabels[detail.theme] || detail.theme}</Tag>
               </Descriptions.Item>
               <Descriptions.Item label="消耗积分">
-                {detail.data.pointsCost}
+                {detail.pointsCost}
               </Descriptions.Item>
               <Descriptions.Item label="命盘姓名">
-                {detail.data.subject?.name || '-'}
+                {detail.subject?.name || '-'}
               </Descriptions.Item>
               <Descriptions.Item label="命盘性别">
-                {detail.data.subject?.gender === 'male' ? '男' : '女'}
+                {detail.subject?.gender === 'male' ? '男' : '女'}
               </Descriptions.Item>
               <Descriptions.Item label="出生日期">
-                {detail.data.subject ? (
-                  `${detail.data.subject.birthYear}-${String(detail.data.subject.birthMonth).padStart(2, '0')}-${String(detail.data.subject.birthDay).padStart(2, '0')} ${String(detail.data.subject.birthHour).padStart(2, '0')}:${String(detail.data.subject.birthMinute).padStart(2, '0')}`
+                {detail.subject ? (
+                  `${detail.subject.birthYear}-${String(detail.subject.birthMonth).padStart(2, '0')}-${String(detail.subject.birthDay).padStart(2, '0')} ${String(detail.subject.birthHour).padStart(2, '0')}:${String(detail.subject.birthMinute).padStart(2, '0')}`
                 ) : '-'}
               </Descriptions.Item>
               <Descriptions.Item label="出生地点">
-                {detail.data.subject?.location || '-'}
+                {detail.subject?.location || '-'}
               </Descriptions.Item>
               <Descriptions.Item label="所属用户">
-                {detail.data.user?.username || detail.data.user?.phone || '-'}
+                {detail.user?.username || detail.user?.phone || '-'}
               </Descriptions.Item>
               <Descriptions.Item label="创建时间">
-                {new Date(detail.data.createdAt).toLocaleString('zh-CN')}
+                {new Date(detail.createdAt).toLocaleString('zh-CN')}
               </Descriptions.Item>
             </Descriptions>
             <Card title="解读内容" size="small">
               <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-all', maxHeight: 500, overflow: 'auto' }}>
-                {JSON.stringify(detail.data.content, null, 2)}
+                {JSON.stringify(detail.content, null, 2)}
               </pre>
             </Card>
           </>

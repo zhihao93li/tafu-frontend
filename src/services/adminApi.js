@@ -54,16 +54,19 @@ export async function adminRequest(endpoint, options = {}) {
     // Handle 204 No Content
     if (response.status === 204) return null;
 
-    const data = await response.json();
+    const result = await response.json();
 
     if (!response.ok) {
       throw new AdminApiError(
-        data.message || '请求失败',
-        data.code,
+        result.message || '请求失败',
+        result.code,
         response.status
       );
     }
-    return data;
+    
+    // 后端返回的是 ApiResponse 格式: { success, code, message, data }
+    // 直接返回 data 字段，简化前端使用
+    return result.data;
   } catch (error) {
     if (isAbortError(error)) {
       throw error;

@@ -49,11 +49,11 @@ export default function PaymentResultPage() {
 
     const fetchData = async () => {
       try {
-        // 获取订单状态
+        // 获取订单状态（API 已返回 data 字段内容）
         const orderResult = await api.get(`/payment/status/${orderNo}`)
         
-        if (orderResult?.success && orderResult.data) {
-          setOrderInfo(orderResult.data)
+        if (orderResult) {
+          setOrderInfo(orderResult)
         } else {
           setError('无法获取订单信息')
         }

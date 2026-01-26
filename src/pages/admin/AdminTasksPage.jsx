@@ -121,13 +121,13 @@ export default function AdminTasksPage() {
       </Card>
       <Table
         columns={columns}
-        dataSource={data?.data?.list || []}
+        dataSource={data?.list || []}
         rowKey="id"
         loading={isLoading}
         pagination={{
           current: page,
           pageSize: pageSize,
-          total: data?.data?.total || 0,
+          total: data?.total || 0,
           showSizeChanger: true,
           showQuickJumper: true,
           showTotal: (total) => `共 ${total} 条`,
@@ -147,47 +147,47 @@ export default function AdminTasksPage() {
         }}
         loading={detailLoading}
       >
-        {taskDetail?.data && (
+        {taskDetail && (
           <Descriptions column={1} bordered>
             <Descriptions.Item label="任务 ID">
-              {taskDetail.data.id}
+              {taskDetail.id}
             </Descriptions.Item>
             <Descriptions.Item label="类型">
-              {taskDetail.data.type}
+              {taskDetail.type}
             </Descriptions.Item>
             <Descriptions.Item label="状态">
-              <Tag color={statusColors[taskDetail.data.status]}>
-                {statusLabels[taskDetail.data.status] || taskDetail.data.status}
+              <Tag color={statusColors[taskDetail.status]}>
+                {statusLabels[taskDetail.status] || taskDetail.status}
               </Tag>
             </Descriptions.Item>
             <Descriptions.Item label="用户 ID">
-              {taskDetail.data.userId}
+              {taskDetail.userId}
             </Descriptions.Item>
             <Descriptions.Item label="任务参数">
               <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
-                {JSON.stringify(taskDetail.data.payload, null, 2)}
+                {JSON.stringify(taskDetail.payload, null, 2)}
               </pre>
             </Descriptions.Item>
-            {taskDetail.data.result && (
+            {taskDetail.result && (
               <Descriptions.Item label="执行结果">
                 <pre style={{ margin: 0, whiteSpace: 'pre-wrap', wordBreak: 'break-all', maxHeight: 300, overflow: 'auto' }}>
-                  {taskDetail.data.result}
+                  {taskDetail.result}
                 </pre>
               </Descriptions.Item>
             )}
-            {taskDetail.data.error && (
+            {taskDetail.error && (
               <Descriptions.Item label="错误信息">
-                <Tag color="error">{taskDetail.data.error}</Tag>
+                <Tag color="error">{taskDetail.error}</Tag>
               </Descriptions.Item>
             )}
             <Descriptions.Item label="创建时间">
-              {new Date(taskDetail.data.createdAt).toLocaleString('zh-CN')}
+              {new Date(taskDetail.createdAt).toLocaleString('zh-CN')}
             </Descriptions.Item>
             <Descriptions.Item label="开始时间">
-              {taskDetail.data.startedAt ? new Date(taskDetail.data.startedAt).toLocaleString('zh-CN') : '-'}
+              {taskDetail.startedAt ? new Date(taskDetail.startedAt).toLocaleString('zh-CN') : '-'}
             </Descriptions.Item>
             <Descriptions.Item label="完成时间">
-              {taskDetail.data.completedAt ? new Date(taskDetail.data.completedAt).toLocaleString('zh-CN') : '-'}
+              {taskDetail.completedAt ? new Date(taskDetail.completedAt).toLocaleString('zh-CN') : '-'}
             </Descriptions.Item>
           </Descriptions>
         )}

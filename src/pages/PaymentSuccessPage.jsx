@@ -30,14 +30,14 @@ export default function PaymentSuccessPage() {
 
     const fetchData = async () => {
       try {
-        // 并行获取订单状态和最新余额
+        // 并行获取订单状态和最新余额（API 已返回 data 字段内容）
         const [orderResult, pointsResult] = await Promise.all([
           orderNo ? api.get(`/payment/status/${orderNo}`) : Promise.resolve(null),
           api.get('/points'),
         ])
 
-        if (orderResult?.success && orderResult.data) {
-          setOrderInfo(orderResult.data)
+        if (orderResult) {
+          setOrderInfo(orderResult)
         }
 
         // 更新用户余额

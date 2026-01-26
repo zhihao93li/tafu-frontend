@@ -101,13 +101,13 @@ export default function AdminUsersPage() {
       </Card>
       <Table
         columns={columns}
-        dataSource={data?.data?.list || []}
+        dataSource={data?.list || []}
         rowKey="id"
         loading={isLoading}
         pagination={{
           current: page,
           pageSize: pageSize,
-          total: data?.data?.total || 0,
+          total: data?.total || 0,
           showSizeChanger: true,
           showQuickJumper: true,
           showTotal: (total) => `共 ${total} 条`,
@@ -127,37 +127,37 @@ export default function AdminUsersPage() {
         }}
         loading={detailLoading}
       >
-        {userDetail?.data && (
+        {userDetail && (
           <Descriptions column={1} bordered>
             <Descriptions.Item label="用户 ID">
-              {userDetail.data.id}
+              {userDetail.id}
             </Descriptions.Item>
             <Descriptions.Item label="用户名">
-              {userDetail.data.username || '-'}
+              {userDetail.username || '-'}
             </Descriptions.Item>
             <Descriptions.Item label="手机号">
-              {userDetail.data.phone || '-'}
+              {userDetail.phone || '-'}
             </Descriptions.Item>
             <Descriptions.Item label="积分余额">
-              <Tag color="blue">{userDetail.data.balance}</Tag>
+              <Tag color="blue">{userDetail.balance}</Tag>
             </Descriptions.Item>
             <Descriptions.Item label="命盘数">
-              {userDetail.data.subjectsCount}
+              {userDetail.subjectsCount}
             </Descriptions.Item>
             <Descriptions.Item label="解读数">
-              {userDetail.data.themeAnalysesCount}
+              {userDetail.themeAnalysesCount}
             </Descriptions.Item>
             <Descriptions.Item label="订单数">
-              {userDetail.data.ordersCount}
+              {userDetail.ordersCount}
             </Descriptions.Item>
             <Descriptions.Item label="交易记录数">
-              {userDetail.data.transactionsCount}
+              {userDetail.transactionsCount}
             </Descriptions.Item>
             <Descriptions.Item label="注册时间">
-              {new Date(userDetail.data.createdAt).toLocaleString('zh-CN')}
+              {new Date(userDetail.createdAt).toLocaleString('zh-CN')}
             </Descriptions.Item>
             <Descriptions.Item label="更新时间">
-              {new Date(userDetail.data.updatedAt).toLocaleString('zh-CN')}
+              {new Date(userDetail.updatedAt).toLocaleString('zh-CN')}
             </Descriptions.Item>
           </Descriptions>
         )}
