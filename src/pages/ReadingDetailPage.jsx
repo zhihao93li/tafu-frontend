@@ -92,8 +92,11 @@ const LOADING_MESSAGES = {
  */
 function parseSimpleMarkdown(text) {
     if (!text) return '';
-
-    return text
+    
+    // 确保 text 是字符串类型
+    const textStr = typeof text === 'string' ? text : String(text || '');
+    
+    return textStr
         .replace(/^### (.*$)/gm, '<h3>$1</h3>')
         .replace(/^## (.*$)/gm, '<h2>$1</h2>')
         .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -311,7 +314,9 @@ export default function ReadingDetailPage() {
                             <div
                                 className={styles.content}
                                 dangerouslySetInnerHTML={{
-                                    __html: parseSimpleMarkdown(currentThemeData.content)
+                                    __html: parseSimpleMarkdown(
+                                        currentThemeData.content.text || currentThemeData.content.content || ''
+                                    )
                                 }}
                             />
                         ) : (
