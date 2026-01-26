@@ -51,12 +51,15 @@ export default function BirthInfoForm({
     // 只有选择了区县才获取经纬度
     if (province && city && district) {
       const location = `${province}/${city}/${district}`;
+      console.log('查询经纬度:', location);
       api.get(`/bazi/coordinates?location=${encodeURIComponent(location)}`)
         .then((data) => {
           // api.get 已经解包了 data，直接使用
+          console.log('经纬度响应:', data);
           setCoordinates(data.coordinates || null);
         })
-        .catch(() => {
+        .catch((error) => {
+          console.error('经纬度查询失败:', error);
           setCoordinates(null);
         });
     } else {

@@ -48,7 +48,8 @@ export default function PaymentMethodPage() {
     if (isLoggedIn && packageId) {
       api.get('/points/packages')
         .then(res => {
-          const found = res.packages.find(p => p.id === packageId)
+          // api.js 已经自动提取了 data 字段，res 直接就是数组
+          const found = (res || []).find(p => p.id === packageId)
           if (found) {
             setPkg({
               ...found,

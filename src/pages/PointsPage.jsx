@@ -52,15 +52,24 @@ export default function PointsPage() {
         api.get('/points'),
         api.get('/points/packages')
       ]).then(([pointsRes, packagesRes]) => {
-        setBalance(pointsRes.balance);
-        setTransactions(pointsRes.transactions);
-        setPackages(packagesRes.packages.map(pkg => ({
+        console.log('📦 原始套餐响应:', packagesRes);
+        console.log('📦 套餐数组类型:', Array.isArray(packagesRes));
+        console.log('📦 套餐数量:', packagesRes?.length);
+        
+        // api.js 已经自动提取了 data 字段，packagesRes 直接就是数组
+        const processedPackages = (packagesRes || []).map(pkg => ({
           ...pkg,
           price: pkg.price / 100,
-        })));
+        }));
+        
+        console.log('✅ 处理后的套餐:', processedPackages);
+        
+        setBalance(pointsRes.balance);
+        setTransactions(pointsRes.transactions);
+        setPackages(processedPackages);
         setIsLoading(false);
       }).catch(err => {
-        console.error(err);
+        console.error('❌ 获取套餐失败:', err);
         setIsLoading(false);
       });
     }
@@ -165,6 +174,7 @@ export default function PointsPage() {
             {/* 充值套餐 */}
             <section className={styles.section}>
               <h2 className={styles.sectionTitle}>充值套餐</h2>
+              {console.log('🎨 渲染套餐数量:', packages.length, '套餐数据:', packages)}
               <div className={styles.packagesGrid}>
                 {packages.map((pkg, index) => {
                   // 根据索引选择不同的图标
