@@ -39,42 +39,53 @@ function getLiuNianYear() {
   const now = new Date();
   const currentYear = now.getFullYear();
 
-  // 获取今年立春的时间
-  const solar = Solar.fromYmd(currentYear, 1, 1);
-  const lunar = solar.getLunar();
-  const jieQi = lunar.getNextJie(); // 获取下一个节（不是气）
-
-  // 遍历找到立春
-  let liChunSolar = null;
-  let tempLunar = lunar;
-  for (let i = 0; i < 15; i++) {
-    const nextJie = tempLunar.getNextJie();
-    if (nextJie && nextJie.getName() === '立春') {
-      liChunSolar = nextJie.getSolar();
-      break;
-    }
-    // 移动到下一个月继续找
-    const nextSolar = Solar.fromYmd(currentYear, 1 + i + 1, 1);
-    tempLunar = nextSolar.getLunar();
-  }
-
-  // 如果找到了立春时间，比较当前日期
-  if (liChunSolar) {
-    const liChunDate = new Date(
-      liChunSolar.getYear(),
-      liChunSolar.getMonth() - 1,
-      liChunSolar.getDay(),
-      liChunSolar.getHour(),
-      liChunSolar.getMinute()
+  try {
+    // 使用当前日期创建Solar对象
+    const currentSolar = Solar.fromYmdHms(
+      now.getFullYear(),
+      now.getMonth() + 1,
+      now.getDate(),
+      now.getHours(),
+      now.getMinutes(),
+      now.getSeconds()
     );
-
-    // 如果当前时间在立春之前，则流年为上一年
-    if (now < liChunDate) {
+    const currentLunar = currentSolar.getLunar();
+    
+    // 获取当前日期对应的精确年干支
+    // getYearInGanZhiExact() 会自动根据立春分界判断
+    const currentYearGanZhi = currentLunar.getYearInGanZhiExact();
+    
+    console.log('[流年调试] 当前时间:', currentSolar.toYmdHms());
+    console.log('[流年调试] 当前年干支:', currentYearGanZhi);
+    
+    // 获取今年7月1日的年干支（一定是今年的干支）
+    const midYearSolar = Solar.fromYmd(currentYear, 7, 1);
+    const midYearLunar = midYearSolar.getLunar();
+    const midYearGanZhi = midYearLunar.getYearInGanZhiExact();
+    
+    console.log('[流年调试] 今年7月年干支:', midYearGanZhi);
+    
+    // 如果当前年干支与今年7月的年干支不同，说明还在立春前（属于上一年）
+    if (currentYearGanZhi !== midYearGanZhi) {
+      console.log('[流年调试] 当前在立春前，使用上一年:', currentYear - 1);
       return currentYear - 1;
     }
+    
+    console.log('[流年调试] 当前在立春后，使用当前年:', currentYear);
+    return currentYear;
+  } catch (error) {
+    console.error('计算流年年份失败:', error);
+    // 降级方案：简单的立春日期判断（立春通常在2月4日左右）
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    
+    // 如果是1月或2月4日前，认为是上一年
+    if (month === 1 || (month === 2 && day < 4)) {
+      return currentYear - 1;
+    }
+    
+    return currentYear;
   }
-
-  return currentYear;
 }
 
 /**
@@ -89,13 +100,23 @@ function calculateCurrentFortune(yun, birthYear) {
   const liuNianYear = getLiuNianYear();
   const currentAge = liuNianYear - birthYear;
 
+  console.log('[流年调试] 当前命理年份:', liuNianYear);
+  console.log('[流年调试] 出生年份:', birthYear);
+  console.log('[流年调试] 当前年龄:', currentAge);
+
   const currentDaYun = yun.daYunList.find(dy =>
     currentAge >= dy.startAge && currentAge < dy.endAge
   );
 
+  console.log('[流年调试] 当前大运:', currentDaYun);
+
   let currentLiuNian = null;
   if (currentDaYun?.liuNian && currentDaYun.liuNian.length > 0) {
+    console.log('[流年调试] 大运内的流年列表:', currentDaYun.liuNian.map(ln => `${ln.year}:${ln.ganZhi}`));
     currentLiuNian = currentDaYun.liuNian.find(ln => ln.year === liuNianYear);
+    console.log('[流年调试] 查找到的流年:', currentLiuNian);
+  } else {
+    console.log('[流年调试] 当前大运没有流年数据');
   }
 
   return { currentDaYun, currentLiuNian };
