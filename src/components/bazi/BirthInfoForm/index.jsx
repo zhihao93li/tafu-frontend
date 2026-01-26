@@ -21,10 +21,9 @@ export default function BirthInfoForm({
   useEffect(() => {
     if (value.calendarType === 'lunar' && value.birthYear) {
       api.get(`/bazi/leap-month/${value.birthYear}`)
-        .then((res) => {
-          if (res.success) {
-            setLeapMonth(res.leapMonth);
-          }
+        .then((data) => {
+          // api.get 已经解包了 data，直接使用
+          setLeapMonth(data.leapMonth || 0);
         })
         .catch(() => {
           setLeapMonth(0);
@@ -53,10 +52,9 @@ export default function BirthInfoForm({
     if (province && city && district) {
       const location = `${province}/${city}/${district}`;
       api.get(`/bazi/coordinates?location=${encodeURIComponent(location)}`)
-        .then((res) => {
-          if (res.success) {
-            setCoordinates(res.coordinates);
-          }
+        .then((data) => {
+          // api.get 已经解包了 data，直接使用
+          setCoordinates(data.coordinates || null);
         })
         .catch(() => {
           setCoordinates(null);
