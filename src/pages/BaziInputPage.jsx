@@ -139,13 +139,13 @@ export default function BaziInputPage() {
 
       if (isLoggedIn) {
         // 已登录：直接调用后端 API 创建命盘，等待完成后跳转
-        const res = await api.post('/subjects', subjectData);
+        const subject = await api.post('/subjects', subjectData);
 
         // 使命盘列表缓存失效，确保其他页面能获取最新数据
         queryClient.invalidateQueries({ queryKey: SUBJECTS_QUERY_KEY });
 
         // 跳转到结果页（使用后端返回的真实 subjectId）
-        navigate(`/bazi?subjectId=${res.subject.id}`);
+        navigate(`/bazi?subjectId=${subject.id}`);
       } else {
         // 未登录：保存到本地，后续登录时再同步
         const localSubject = {

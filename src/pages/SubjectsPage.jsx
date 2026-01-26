@@ -20,8 +20,9 @@ export default function SubjectsPage() {
 
   // Load data from API
   useEffect(() => {
-    api.get('/subjects').then(res => {
-      setSubjects(res.subjects);
+    api.get('/subjects').then(page => {
+      // 后端返回 Page<SubjectResponse>，取 content 数组
+      setSubjects(page.content || []);
     }).catch(err => {
       // toast.error('加载失败');
     });
@@ -53,7 +54,8 @@ export default function SubjectsPage() {
     if (editingSubject) {
       try {
         // Edit only updates basic info
-        const res = await api.put(`/subjects/${editingSubject.id}`, {
+        // api.js 解包后直接返回 SubjectResponse
+        const updatedSubject = await api.put(`/subjects/${editingSubject.id}`, {
           name: formData.name,
           relationship: formData.relationship,
           // gender/birth info updates might require re-calculation, 
@@ -61,7 +63,7 @@ export default function SubjectsPage() {
           // For now assume simple metadata update or backend handles it.
           // Based on plan: "Edit object (cannot modify baziData, only name etc)"
         });
-        setSubjects(prev => prev.map(s => s.id === editingSubject.id ? res.subject : s));
+        setSubjects(prev => prev.map(s => s.id === editingSubject.id ? updatedSubject : s));
         toast.success('更新成功');
         setIsModalOpen(false);
       } catch (error) {

@@ -28,8 +28,10 @@ export function useSubjects(isLoggedIn) {
       // 如果已登录，加载后端命盘
       if (isLoggedIn) {
         try {
-          const res = await api.get('/subjects', { signal });
-          allSubjects = [...allSubjects, ...(res.subjects || [])];
+          // 后端返回 Page<SubjectResponse>，api.js 解包后是 { content: [...], totalElements: ..., ... }
+          const page = await api.get('/subjects', { signal });
+          const cloudSubjects = page.content || [];
+          allSubjects = [...allSubjects, ...cloudSubjects];
         } catch (error) {
           // 如果是取消请求，重新抛出
           if (isAbortError(error)) throw error;
@@ -52,7 +54,8 @@ export function useSyncLocalSubject() {
 
   return useMutation({
     mutationFn: async (localSubject) => {
-      const res = await api.post('/subjects', {
+      // api.js 解包后直接返回 SubjectResponse
+      const newSubject = await api.post('/subjects', {
         name: localSubject.name,
         gender: localSubject.gender,
         calendarType: localSubject.calendarType,
@@ -66,7 +69,7 @@ export function useSyncLocalSubject() {
         baziData: localSubject.baziData,
       });
 
-      return { newSubject: res.subject, localId: localSubject.id };
+      return { newSubject, localId: localSubject.id };
     },
     onSuccess: ({ newSubject, localId }) => {
       // 删除本地存储中的命盘

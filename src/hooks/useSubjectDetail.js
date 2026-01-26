@@ -42,9 +42,8 @@ export function useSubjectDetail(subjectId, localId, options = {}) {
           return existingSubject;
         }
 
-        // 请求后端获取详情
-        const res = await api.get(`/subjects/${subjectId}`, { signal });
-        return res.subject;
+        // 请求后端获取详情（api.js 已经解包了 data，直接返回 SubjectResponse）
+        return await api.get(`/subjects/${subjectId}`, { signal });
       }
 
       return null;
@@ -71,8 +70,8 @@ export function usePrefetchSubjectDetail() {
       await queryClient.prefetchQuery({
         queryKey: [SUBJECT_DETAIL_QUERY_KEY, subjectId],
         queryFn: async ({ signal }) => {
-          const res = await api.get(`/subjects/${subjectId}`, { signal });
-          return res.subject;
+          // api.js 已经解包了 data，直接返回 SubjectResponse
+          return await api.get(`/subjects/${subjectId}`, { signal });
         },
         staleTime: 10 * 60 * 1000,
       });
