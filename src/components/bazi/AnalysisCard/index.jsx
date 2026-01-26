@@ -96,8 +96,10 @@ export default function AnalysisCard({
 // In production, install 'react-markdown'
 function parseSimpleMarkdown(text) {
   if (!text) return '';
+  // 确保 text 是字符串
+  const textStr = typeof text === 'string' ? text : String(text);
   
-  let html = text
+  let html = textStr
     // Headers
     .replace(/^### (.*$)/gm, '<h3>$1</h3>')
     // Bold

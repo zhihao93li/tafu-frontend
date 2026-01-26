@@ -16,8 +16,10 @@ import styles from './ReadingEntryCard.module.css';
  */
 function truncateSummary(text, maxLength = 80) {
     if (!text) return '';
+    // 确保 text 是字符串
+    const textStr = typeof text === 'string' ? text : String(text);
     // 移除Markdown标记
-    const cleanText = text
+    const cleanText = textStr
         .replace(/^#+\s/gm, '')
         .replace(/\*\*(.*?)\*\*/g, '$1')
         .replace(/^[-*]\s/gm, '')

@@ -18,8 +18,10 @@ const SPECIAL_THEMES = [
  */
 function parseSimpleMarkdown(text) {
   if (!text) return '';
+  // 确保 text 是字符串
+  const textStr = typeof text === 'string' ? text : String(text);
 
-  return text
+  return textStr
     .replace(/^### (.*$)/gm, '<h3>$1</h3>')
     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
     .replace(/^- (.*$)/gm, '<ul><li>$1</li></ul>')

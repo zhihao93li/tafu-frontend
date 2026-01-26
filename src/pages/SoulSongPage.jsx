@@ -265,13 +265,15 @@ export default function SoulSongPage() {
                                         <div className={styles.lyricSection}>
                                             <h4 className={styles.lyricLabel}>歌词片段</h4>
                                             <div className={styles.lyricText}>
-                                                {song.qqMusic.lyric
-                                                    .split('\n')
-                                                    .filter(line => line.trim() && !line.startsWith('['))
-                                                    .slice(0, 4)
-                                                    .map((line, i) => (
-                                                        <p key={i}>{line.replace(/\[.*?\]/g, '').trim()}</p>
-                                                    ))
+                                                {song.qqMusic.lyric && typeof song.qqMusic.lyric === 'string'
+                                                    ? song.qqMusic.lyric
+                                                        .split('\n')
+                                                        .filter(line => line.trim() && !line.startsWith('['))
+                                                        .slice(0, 4)
+                                                        .map((line, i) => (
+                                                            <p key={i}>{line.replace(/\[.*?\]/g, '').trim()}</p>
+                                                        ))
+                                                    : null
                                                 }
                                             </div>
                                         </div>

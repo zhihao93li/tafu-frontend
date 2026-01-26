@@ -53,6 +53,17 @@ export async function request(endpoint, options = {}) {
     const result = await response.json();
     
     if (!response.ok) {
+      // 处理认证失败：401 Unauthorized 或 403 Forbidden
+      if (response.status === 401 || response.status === 403) {
+        clearToken();
+        localStorage.removeItem('bazi_user_cache');
+        // 如果不是登录页面，则重定向到登录页
+        if (!window.location.pathname.includes('/login')) {
+          const currentPath = window.location.pathname + window.location.search;
+          window.location.href = `/login?callbackUrl=${encodeURIComponent(currentPath)}`;
+        }
+      }
+      
       throw new ApiError(
         result.message || '请求失败',
         result.code,
