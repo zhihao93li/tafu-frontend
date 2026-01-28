@@ -20,6 +20,10 @@ export default function PaymentSuccessPage() {
   const [error, setError] = useState(null)
 
   const orderNo = searchParams.get('order_no')
+  const sessionId = searchParams.get('session_id')
+  
+  // 支持两种支付方式的标识符：码支付使用 order_no，Stripe 使用 session_id
+  const identifier = orderNo || sessionId
   
   // 从 sessionStorage 获取支付前的返回地址
   const returnUrl = sessionStorage.getItem('paymentReturnUrl')
@@ -32,7 +36,7 @@ export default function PaymentSuccessPage() {
       try {
         // 并行获取订单状态和最新余额（API 已返回 data 字段内容）
         const [orderResult, pointsResult] = await Promise.all([
-          orderNo ? api.get(`/payment/status/${orderNo}`) : Promise.resolve(null),
+          identifier ? api.get(`/payment/status/${identifier}`) : Promise.resolve(null),
           api.get('/points'),
         ])
 
@@ -55,7 +59,7 @@ export default function PaymentSuccessPage() {
     // 延迟一点再获取，给 webhook 时间处理
     const timer = setTimeout(fetchData, 1000)
     return () => clearTimeout(timer)
-  }, [orderNo, isLoggedIn, authLoading, updateUser])
+  }, [identifier, isLoggedIn, authLoading, updateUser])
 
   if (authLoading) {
     return (
