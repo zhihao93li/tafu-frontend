@@ -142,7 +142,8 @@ export default function PillarColumn({
       <div className={styles.hiddenStemsArea}>
         {hiddenStems && hiddenStems.length > 0 ? (
           hiddenStems.map((hs, idx) => {
-            const hsShiShen = shiShenZhi?.[idx] || getGanShiShen(dayStem, hs);
+            // ⭐ 直接使用后端返回的 tenGod 字段
+            const hsShiShen = hs.tenGod || '-';
             return (
               <div key={idx} className={styles.hiddenStemRow}>
                 <span
