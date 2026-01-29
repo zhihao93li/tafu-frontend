@@ -38,7 +38,6 @@ function getShiShenClass(shiShen) {
  */
 function getGanShiShen(dayStem, targetStem) {
   if (!dayStem || !targetStem) return '';
-  if (dayStem.chinese === targetStem.chinese) return '日元';
 
   const dayElement = dayStem.element;
   const dayYinYang = dayStem.yinYang;
